@@ -5,11 +5,16 @@
 #include <QTime>
 #include <QMessageBox>
 #include <QTextStream>
+#include <QMutex>
+#include <QMutexLocker>
 
 #define LOG_PATH "./debug/log.txt"
+QMutex mutex;
 
 void messageHandler(QtMsgType type, const QMessageLogContext &context, const QString &msg)
 {
+    QMutexLocker mutexLocker(&mutex);
+
     QFile logFile(LOG_PATH);
     if (!logFile.open(QIODevice::WriteOnly | QIODevice::Append))
     {
